@@ -1,4 +1,5 @@
 {% extends 'base.html'%}
+{% load bootstrap4 %}
 {%block body%}
 <div class="container">
   <h5>{{post.title}}</h5>
@@ -11,4 +12,20 @@
     <input class="btn btn-danger" type="submit" value="삭제">
   </form>
 </div>
+
+<form action="{% url 'posts:comments_create' post.id%}" method="post">
+  {%csrf_token%}
+  {%bootstrap_form create_form%}
+  <input type="submit" class="btn btn-dark" value="commenting">
+</form>
+
+<div>
+  {% for comment in post.comment_set.all%}
+  <h5>{{comment.user.username}}</h5>
+  <h6>{{comment.content}}</h6>
+  {%endfor%}
+</div>
+
+
+
 {%endblock%}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from .models import Post
 # Create your views here.
@@ -27,7 +27,8 @@ def create(req):
 
 def detail(req, post_id):
     post = get_object_or_404(Post, id=post_id)
-    return render(req, 'posts/detail.html', {'post': post})
+    create_form = CommentForm()
+    return render(req, 'posts/detail.html', {'post': post, 'create_form': create_form})
 
 
 def update(req, post_id):
@@ -57,3 +58,20 @@ def delete(req, post_id):
         post.delete()
 
     return redirect('posts:index')
+
+
+def comments_create(req, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if req.user.is_authenticated:
+        user = req.user
+        if req.method == "POST":
+            form = CommentForm(req.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post = post
+                comment.user = user
+                comment.save()
+                return redirect('posts:detail', post_id)
+    else:
+        return redirect('posts:detail', post_id)
