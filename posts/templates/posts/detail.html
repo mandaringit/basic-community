@@ -1,0 +1,14 @@
+{% extends 'base.html'%}
+{%block body%}
+<div class="container">
+  <h5>{{post.title}}</h5>
+  <h5>{{post.content}}</h5>
+  <h5>{{post.created_at}}</h5>
+  <h5>{{post.user.username}}</h5>
+  <a class="btn btn-warning" href="{%url 'posts:update' post.id%}">수정</a>
+  <form action="{%url 'posts:delete' post.id%}" method="POST">
+    {%csrf_token%}
+    <input class="btn btn-danger" type="submit" value="삭제">
+  </form>
+</div>
+{%endblock%}
