@@ -11,14 +11,14 @@ def index(req):
 
 def signup(req):
     if req.user.is_authenticated:
-        return redirect('accounts:index')
+        return redirect('posts:index')
 
     if req.method == 'POST':
         form = UserCreationForm(req.POST)
         if form.is_valid():
             user = form.save()
             auth_login(req, user)
-            return redirect('accounts:index')
+            return redirect('posts:index')
     else:
         form = UserCreationForm()
     return render(req, 'accounts/form.html', {'form': form})
@@ -26,13 +26,13 @@ def signup(req):
 
 def login(req):
     if req.user.is_authenticated:
-        return redirect('accounts:index')
+        return redirect('posts:index')
 
     if req.method == "POST":  # 인증만 하는 것이기 때문에 form.get_user로 유저 정보를 가져와야함
         form = AuthenticationForm(req, req.POST)
         if form.is_valid():
             auth_login(req, form.get_user())
-            return redirect(req.GET.get('next') or 'accounts:index')
+            return redirect(req.GET.get('next') or 'posts:index')
     else:
         form = AuthenticationForm()
 
@@ -41,4 +41,4 @@ def login(req):
 
 def logout(req):
     auth_logout(req)
-    return redirect('accounts:index')
+    return redirect('posts:index')
