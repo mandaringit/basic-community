@@ -32,7 +32,7 @@ def login(req):
         form = AuthenticationForm(req, req.POST)
         if form.is_valid():
             auth_login(req, form.get_user())
-            return redirect('accounts:index')
+            return redirect(req.GET.get('next') or 'accounts:index')
     else:
         form = AuthenticationForm()
 
