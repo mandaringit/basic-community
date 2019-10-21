@@ -1,28 +1,35 @@
 {%extends 'base.html'%}
+{% load humanize %}
 {%block body%}
 <div class="container my-5">
   <h1 class="mb-5">👋 {{user.username}}</h1>
-  <h2 class="my-3">📝 나의 POST</h2>
+  <h2 class="my-3">📝 나의 POST [{{user.post_set.count}}]</h2>
   <hr>
   <div class="my-4">
     {% for post in user.post_set.all %}
-    <h5 class="font-weight-bold">
-      <a href="{% url 'posts:detail' post.id%}" class="text-dark" style="text-decoration: none;">
-        {{post.title}}
-      </a>
-    </h5>
+    <div class="d-flex">
+      <h6 class="mr-3">{{post.created_at|naturaltime}}</h6>
+      <h5 class="font-weight-bold">
+        <a href="{% url 'posts:detail' post.id%}" class="text-dark" style="text-decoration: none;">
+          {{post.title}}
+        </a>
+      </h5>
+    </div>
     {% endfor %}
   </div>
 
-  <h2 class="my-3">💬 나의 COMMENT</h2>
+  <h2 class="my-3">💬 나의 COMMENT [{{user.comment_set.count}}]</h2>
   <hr>
   <div class="my-4">
     {% for comment in user.comment_set.all %}
-    <h5 class="font-weight-bold">
-      <a href="{% url 'posts:detail' comment.post.id%}" class="text-dark" style="text-decoration: none;">
-        {{comment.content}}
-      </a>
-    </h5>
+    <div class="d-flex">
+      <h6 class="mr-3">{{comment.created_at|naturaltime}}</h6>
+      <h5 class="font-weight-bold">
+        <a href="{% url 'posts:detail' comment.post.id%}" class="text-dark" style="text-decoration: none;">
+          {{comment.content}}
+        </a>
+      </h5>
+    </div>
     {% endfor %}
   </div>
 </div>
