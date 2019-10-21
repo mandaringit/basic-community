@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+{%block body%}
+<div class="container my-5">
+  <h1 class="mb-5">👋 {{user.username}}</h1>
+  <h2 class="my-3">📝 나의 POST</h2>
+  <hr>
+  <div class="my-4">
+    {% for post in user.post_set.all %}
+    <h5 class="font-weight-bold">
+      <a href="{% url 'posts:detail' post.id%}" class="text-dark" style="text-decoration: none;">
+        {{post.title}}
+      </a>
+    </h5>
+    {% endfor %}
+  </div>
+
+  <h2 class="my-3">💬 나의 COMMENT</h2>
+  <hr>
+  <div class="my-4">
+    {% for comment in user.comment_set.all %}
+    <h5 class="font-weight-bold">
+      <a href="{% url 'posts:detail' comment.post.id%}" class="text-dark" style="text-decoration: none;">
+        {{comment.content}}
+      </a>
+    </h5>
+    {% endfor %}
+  </div>
+</div>
+
+
+{%endblock%}

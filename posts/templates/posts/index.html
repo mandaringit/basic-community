@@ -1,10 +1,38 @@
 {%extends 'base.html'%}
+{% load humanize %}
 {%block body%}
-<h1>posts index</h1>
-{% for post in posts %}
-<h4>{{post.title}}</h4>
-<h6>{{post.user.username}}</h6>
-<h5>{{post.content}}</h5>
-<a class="btn btn-dark" href="{%url 'posts:detail' post.id%}">detail</a>
-{% endfor %}
+<div class="container my-5">
+  <h1 class="my-3">📝 POSTS</h1>
+  <hr>
+  <div class="row">
+    {% for post in posts %}
+    <div class="col-12 col-lg-4 my-2">
+      <div class="card-deck">
+        <div class="card">
+          <a href="{% url 'posts:detail' post.id%}">
+            {% if post.post_img == ''%}
+            <img src="http://www.wikitree.co.kr/webdata/editor/201909/23/img_20190923154844_113f6f66.jpg"
+              class="card-img-top" style="min-height:15rem;max-height:15rem; height:100%;object-fit:cover;">
+            {% else%}
+            <img src="{{post.post_img}}" class="card-img-top"
+              style="min-height:15rem;max-height:15rem; height:100%;object-fit:cover;">
+            {%endif%}
+          </a>
+
+          <div class="card-body">
+            <a href="{% url 'posts:detail' post.id%}" style="text-decoration: none;color:black;">
+              <h5 class="card-title m-0 font-weight-bold">{{post.title}} [{{post.comment_set.count}}]</h5>
+            </a>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <small class="text-muted">👤 {{post.user.username}}</small>
+            <small class="text-muted">⌛ {{post.created_at|naturaltime}}</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {%endblock%}

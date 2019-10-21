@@ -2,11 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
-def index(req):
-    return render(req, 'accounts/index.html')
+@login_required
+def mypage(req):
+    user = req.user
+
+    return render(req, 'accounts/mypage.html', {'user': user})
 
 
 def signup(req):

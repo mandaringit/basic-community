@@ -3,7 +3,7 @@
 {%block body%}
 <div class="container my-3">
   <div class="d-flex justify-content-between align-items-center">
-    <h2 class="mb-3">{{post.title}}</h2>
+    <h2 class="mb-3 font-weight-bold">{{post.title}}</h2>
     {%if request.user == post.user %}
     <div class="d-flex justify-content-end">
       <div>
@@ -20,27 +20,39 @@
     <h6 class="mr-3">👤 {{post.user.username}}</h6>
     <h6 class="text-muted mb-3">📅 {{post.created_at}}</h6>
   </div>
-  <hr>
-  <p>{{post.content}}</p>
-  <hr>
 
+  <hr style="border: 2px solid rgba(0,0,0,.1);">
 
+  <p class="m-2" style="min-height: 100px;">{{post.content}}</p>
+
+  <hr style="border: 2px solid rgba(0,0,0,.1);">
+
+  <h6>💬 COMMENT</h6>
   <form class="my-3" action="{% url 'posts:comments_create' post.id%}" method="post">
     {%csrf_token%}
     {%bootstrap_form comment_form%}
-    <input type="submit" class="btn btn-dark btn-sm" value="댓글달기">
+    <div class="d-flex justify-content-end">
+      <input type="submit" class="btn btn-dark btn-sm" value="댓글달기">
+    </div>
   </form>
-  <hr>
-  {% for comment in post.comment_set.all%}
-  <div class="d-flex justify-content-between">
 
-    <div class="d-flex align-items-center">
-      <h5 class="mr-2">{{comment.user.username}}</h5>
+  <hr>
+
+  {% for comment in post.comment_set.all%}
+  <div class="d-flex justify-content-between my-1">
+
+
+    <div class="d-flex justify-content-between align-items-center">
+      <h6 class="text-muted mr-2">{{comment.user.username}}</h6>
+      <div class="mr-2"
+        style="background-image: url({{comment.comment_img}});width:75px;height:75px;background-position:center;background-size:cover; background-color:rgb(77, 66, 90); border-radius:10px;">
+      </div>
       <h6>{{comment.content}}</h6>
     </div>
 
+
     <div class="d-flex align-items-center">
-      {% if request.user == comment.user%}
+      {% if request.user == comment.user %}
       <form class="mr-1" action="{%  url 'posts:comments_delete' post.id comment.id%}" method="post">
         {%csrf_token%}
         <input type="submit" class="btn btn-dark btn-sm" value="🗑️">
