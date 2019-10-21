@@ -11,11 +11,44 @@
 </head>
 
 <body>
-  <a href="{%url 'accounts:signup'%}">회원가입</a>
-  <a href="{%url 'accounts:login'%}">로그인</a>
-  <a href="{%url 'accounts:logout'%}">로그아웃</a>
-  <a href="#">탈퇴</a>
-  <a href="{%url 'posts:create'%}">글쓰기</a>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'posts:index' %}">COMMUNITY</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav d-flex justify-content-between" style="width:100%;">
+        <div>
+          <li class="nav-item">
+            <a class="nav-link" href="{%url 'posts:index'%}">전체글</a>
+          </li>
+        </div>
+
+        <div class="d-flex">
+          {% if user.is_authenticated %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{%url 'posts:create'%}">글쓰기</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{%url 'accounts:logout'%}">로그아웃</a>
+          </li>
+
+          {% else%}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{%url 'accounts:signup'%}">회원가입</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{%url 'accounts:login'%}">로그인</a>
+          </li>
+          {% endif %}
+        </div>
+      </ul>
+    </div>
+  </nav>
+
   {%block body%}
   {%endblock%}
 
