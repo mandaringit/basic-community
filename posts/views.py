@@ -108,9 +108,22 @@ def post_like(req, post_id):
     post = get_object_or_404(Post, id=post_id)
     user = req.user
 
-    if user in post.likes.all():
-        post.likes.remove(user)
+    if user in post.like_users.all():
+        post.like_users.remove(user)
     else:
-        post.likes.add(user)
+        post.like_users.add(user)
+
+    return redirect('posts:detail', post_id)
+
+
+@login_required
+def comment_like(req, post_id, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    user = req.user
+
+    if comment.like_users.filter(id=user.id):
+        comment.like_users.remove(user)
+    else:
+        comment.like_users.add(user)
 
     return redirect('posts:detail', post_id)

@@ -19,7 +19,7 @@
   <div class="d-flex">
     <h6 class="m-0 mr-3">👤 {{post.user.username}}</h6>
     <h6 class="text-muted m-0 mr-3">📅 {{post.created_at}}</h6>
-    <h6 class="text-primary m-0 mr-3">👍{{post.likes.count}}</h6>
+    <h6 class="text-primary m-0 mr-3">👍{{post.like_users.count}}</h6>
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
@@ -27,7 +27,7 @@
   <p class="my-5" style="min-height: 100px;">{{post.content}}</p>
   <div class="text-center my-5">
     {% if user.is_authenticated %}
-    {% if user in post.likes.all %}
+    {% if user in post.like_users.all %}
     <a class="btn btn-danger btn-sm" href="{%url 'posts:post_like' post.id %}">시러요</a>
     {% else %}
     <a class="btn btn-primary btn-sm" href="{%url 'posts:post_like' post.id %}">조아요</a>
@@ -50,8 +50,16 @@
 
   {% for comment in post.comment_set.all%}
   <div class="d-flex justify-content-between align-items-center">
-    <h6 class="text-muted mx-2">{{comment.user.username}}</h6>
+    <h6 class="text-muted mx-2">{{comment.user.username}} 👍{{comment.like_users.count}}</h6>
     <div class="d-flex align-items-center">
+      {% if user.is_authenticated %}
+      {% if user in comment.like_users.all %}
+      <a class="btn btn-sm btn-danger mr-1" href="{% url 'posts:comment_like' post.id comment.id %}">싫어요</a>
+      {% else %}
+      <a class="btn btn-sm btn-primary mr-1" href="{% url 'posts:comment_like' post.id comment.id %}">좋아요</a>
+      {% endif %}
+      {% endif %}
+
       {% if request.user == comment.user %}
       <form class="mr-1" action="{%  url 'posts:comments_delete' post.id comment.id%}" method="post">
         {%csrf_token%}
@@ -59,6 +67,7 @@
       </form>
       <a class="btn btn-sm btn-warning" href="{% url 'posts:comments_update' post.id comment.id %}">✏️</a>
       {% endif%}
+
     </div>
   </div>
 
