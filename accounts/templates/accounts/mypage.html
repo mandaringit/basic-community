@@ -24,14 +24,31 @@
     {% for comment in user.comment_set.all %}
     <div class="d-flex">
       <h6 class="mr-3">{{comment.created_at|naturaltime}}</h6>
-      <h5 class="font-weight-bold">
-        <a href="{% url 'posts:detail' comment.post.id%}" class="text-dark" style="text-decoration: none;">
+      <h5>
+        <a href="{% url 'posts:detail' comment.post.id%}" class="text-dark  font-weight-bold"
+          style="text-decoration: none;">
           {{comment.content}}
         </a>
       </h5>
     </div>
     {% endfor %}
+
+
   </div>
+  <h2 class="my-4">👍 나의 따봉 포스트 [{{user.like_posts.count}}]</h2>
+  <hr>
+  {% for post in user.like_posts.all%}
+  <h5><a class="text-dark font-weight-bold" style="text-decoration:none;"
+      href="{%url 'posts:detail' post.id%}">{{post.title}}</a></h5>
+  {%endfor%}
+
+  <h2 class="my-4">📑 나의 따봉 코멘트 [{{user.like_comments.count}}]</h2>
+  <hr>
+  {% for comment in user.like_comments.all%}
+  <h5><a class="text-dark font-weight-bold" style="text-decoration:none;"
+      href="{%url 'posts:detail' comment.post.id%}">{{comment.content}}</a></h5>
+  {%endfor%}
+
 </div>
 
 

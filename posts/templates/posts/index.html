@@ -26,6 +26,7 @@
           </div>
           <div class="card-footer d-flex justify-content-between">
             <small class="text-muted">👤 {{post.user.username}}</small>
+            <small class="text-muted">👍 {{post.like_users.count}}</small>
             <small class="text-muted">⌛ {{post.created_at|naturaltime}}</small>
           </div>
         </div>
