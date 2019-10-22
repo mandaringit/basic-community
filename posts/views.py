@@ -101,3 +101,16 @@ def comments_update(req, post_id, comment_id):
         return render(req, 'posts/form.html', {'form': form})
     else:
         return redirect('posts:detail', post_id)
+
+
+@login_required
+def post_like(req, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    user = req.user
+
+    if user in post.likes.all():
+        post.likes.remove(user)
+    else:
+        post.likes.add(user)
+
+    return redirect('posts:detail', post_id)

@@ -17,13 +17,23 @@
     {%endif%}
   </div>
   <div class="d-flex">
-    <h6 class="mr-3">👤 {{post.user.username}}</h6>
-    <h6 class="text-muted mb-3">📅 {{post.created_at}}</h6>
+    <h6 class="m-0 mr-3">👤 {{post.user.username}}</h6>
+    <h6 class="text-muted m-0 mr-3">📅 {{post.created_at}}</h6>
+    <h6 class="text-primary m-0 mr-3">👍{{post.likes.count}}</h6>
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
 
-  <p class="m-2" style="min-height: 100px;">{{post.content}}</p>
+  <p class="my-5" style="min-height: 100px;">{{post.content}}</p>
+  <div class="text-center my-5">
+    {% if user.is_authenticated %}
+    {% if user in post.likes.all %}
+    <a class="btn btn-danger btn-sm" href="{%url 'posts:post_like' post.id %}">시러요</a>
+    {% else %}
+    <a class="btn btn-primary btn-sm" href="{%url 'posts:post_like' post.id %}">조아요</a>
+    {% endif %}
+    {% endif %}
+  </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
 
