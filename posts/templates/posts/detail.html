@@ -80,7 +80,7 @@
       <div class="mr-2"
         style="background-image: url({{comment.comment_img}});width:75px;height:75px;background-position:center;background-size:cover; background-color:white; border-radius:10px;">
       </div>
-      <h6>{{comment.content}}</h6>
+      <h6>{{comment|hashtag_link|safe}}</h6>
     </div>
   </div>
   <hr style="border: 1px solid rgba(0,0,0,0.1);">
