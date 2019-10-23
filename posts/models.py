@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-# Create your models here.
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail, ResizeToFill
 
 
 class Post(models.Model):
@@ -8,7 +9,11 @@ class Post(models.Model):
                              on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     content = models.TextField()
-    post_img = models.TextField()
+    post_img = ProcessedImageField(
+        processors=[ResizeToFill(300, 300)],
+        format='GIF',
+        options={'quality': 90},
+        upload_to='media')
     created_at = models.DateTimeField(auto_now_add=True)
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='like_posts')

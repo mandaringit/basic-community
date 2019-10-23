@@ -23,7 +23,9 @@
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
-
+  <div class="text-center">
+    <img src="{{post.post_img.url}}">
+  </div>
   <p class="my-5" style="min-height: 100px;">{{post.content}}</p>
   <div class="text-center my-5">
     {% if user.is_authenticated %}

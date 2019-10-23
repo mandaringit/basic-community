@@ -10,11 +10,11 @@
       <div class="card-deck">
         <div class="card">
           <a href="{% url 'posts:detail' post.id%}">
-            {% if post.post_img == ''%}
+            {% if post.post_img.url == ''%}
             <img src="http://www.wikitree.co.kr/webdata/editor/201909/23/img_20190923154844_113f6f66.jpg"
               class="card-img-top" style="min-height:15rem;max-height:15rem; height:100%;object-fit:cover;">
             {% else%}
-            <img src="{{post.post_img}}" class="card-img-top"
+            <img src="{{post.post_img.url}}" class="card-img-top"
               style="min-height:15rem;max-height:15rem; height:100%;object-fit:cover;">
             {%endif%}
           </a>

@@ -15,7 +15,7 @@ def index(req):
 def create(req):
     user = req.user
     if req.method == "POST":
-        form = PostForm(req.POST)
+        form = PostForm(req.POST, req.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = user
