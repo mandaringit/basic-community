@@ -54,3 +54,17 @@ def user_page(req, user_id):
     search_user = get_object_or_404(User, id=user_id)
 
     return render(req, 'accounts/user_page.html', {'search_user': search_user})
+
+
+@login_required
+def follow(req, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    user = req.user
+
+    if target_user != user:
+        if target_user in user.followings.all():
+            user.followings.remove(target_user)
+        else:
+            user.followings.add(target_user)
+
+    return redirect('accounts:user_page', user_id)

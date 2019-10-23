@@ -2,11 +2,24 @@
 {% load humanize%}
 {% block body %}
 <div class="container my-5">
-  <h1>📜 {{search_user.username}}님의 페이지</h1>
+  <div class="d-flex align-items-center justify-content-between">
+    <h1>📜 {{search_user.username}}님의 페이지</h1>
+    {%if user.is_authenticated and user != search_user %}
+    {% if search_user in user.followings.all %}
+    <div>
+      <a class="btn btn-sm btn-danger" href="{% url 'accounts:follow' search_user.id %}">🖕 언팔로우</a>
+    </div>
+    {% else%}
+    <div>
+      <a class="btn btn-sm btn-primary" href="{% url 'accounts:follow' search_user.id %}">🦅 팔로우</a>
+    </div>
+    {% endif%}
+    {% endif%}
+  </div>
   <hr>
   <div class="d-flex justify-content-around">
-    <h4>팔로잉 [{{search_user.followings.count}}]</h4>
-    <h4>팔로워 [{{search_user.followers|length}}]</h4>
+    <h4>팔로잉 [{{search_user.followings.all.count}}]</h4>
+    <h4>팔로워 [{{search_user.followers.all|length}}]</h4>
   </div>
   <div class="my-3">
     {% for post in search_user.post_set.all %}
