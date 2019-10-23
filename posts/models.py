@@ -4,6 +4,10 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail, ResizeToFill
 
 
+class Hashtag(models.Model):
+    content = models.CharField(max_length=100)
+
+
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
@@ -17,6 +21,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='like_posts')
+    hashtags = models.ManyToManyField(Hashtag, related_name="posts")
 
 
 class Comment(models.Model):
@@ -28,3 +33,4 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='like_comments')
+    hashtags = models.ManyToManyField(Hashtag, related_name="comments")

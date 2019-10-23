@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
-from .models import Post, Comment
+from .models import Post, Comment, Hashtag
 import random
 # Create your views here.
 
@@ -20,6 +20,14 @@ def create(req):
             post = form.save(commit=False)
             post.user = user
             post.save()
+
+            # 해시태그 작업 (구체적인 방법은 수정 필요.)
+            for word in post.content.split():
+                if word.startswith('#'):
+                    hashtag, created = Hashtag.objects.get_or_create(
+                        content=word)
+                    post.hashtags.add(hashtag)
+
             return redirect('posts:index')
     else:
         form = PostForm()
@@ -42,7 +50,14 @@ def update(req, post_id):
         if req.method == "POST":
             form = PostForm(req.POST, req.FILES, instance=post)
             if form.is_valid():
-                form.save()
+                post = form.save()
+                # 해시태그 재작업 필요함
+                for word in post.content.split():
+                    if word.startswith('#'):
+                        hashtag, created = Hashtag.objects.get_or_create(
+                            content=word)
+                        post.hashtags.add(hashtag)
+
                 return redirect('posts:detail', post_id)
         else:
             form = PostForm(instance=post)
@@ -73,6 +88,14 @@ def comments_create(req, post_id):
                 comment.post = post
                 comment.user = user
                 comment.save()
+
+                # 해시태그 작업
+                for word in comment.content.split():
+                    if word.startswith('#'):
+                        hashtag, created = Hashtag.objects.get_or_create(
+                            content=word)
+                        comment.hashtags.add(hashtag)
+
                 return redirect('posts:detail', post_id)
     else:
         return redirect('posts:detail', post_id)
@@ -94,6 +117,7 @@ def comments_update(req, post_id, comment_id):
             form = CommentForm(req.POST, instance=comment)
             if form.is_valid():
                 form.save()
+                # 해시태그 재작업 필요함
                 return redirect('posts:detail', post_id)
         else:
             form = CommentForm(instance=comment)
@@ -127,3 +151,9 @@ def comment_like(req, post_id, comment_id):
         comment.like_users.add(user)
 
     return redirect('posts:detail', post_id)
+
+
+def hashtag(req, tag_id):
+    hashtag = get_object_or_404(Hashtag, id=tag_id)
+
+    return render(req, 'posts/hashtag.html', {'hashtag': hashtag})
