@@ -40,7 +40,7 @@ def update(req, post_id):
         return redirect('posts:detail', post_id)
     else:
         if req.method == "POST":
-            form = PostForm(req.POST, instance=post)
+            form = PostForm(req.POST, req.FILES, instance=post)
             if form.is_valid():
                 form.save()
                 return redirect('posts:detail', post_id)
