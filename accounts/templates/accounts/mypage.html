@@ -2,7 +2,23 @@
 {% load humanize %}
 {%block body%}
 <div class="container my-5">
-  <h1 class="mb-5">👋 {{user.username}}</h1>
+  <h1 class="mb-3">👋 {{user.username}}</h1>
+  <div class="d-flex justify-content-around py-3 mb-4" style="border: 2px solid gray; border-radius:3px;">
+    <div>
+      <h4>내가 팔로잉 하는 사람</h4>
+
+      {% for following in user.followings.all %}
+      <h5 class="text-center"><a href="{% url 'accounts:user_page' following.id%}">{{following.username}}</a></h5>
+      {% endfor %}
+
+    </div>
+    <div>
+      <h4>나를 팔로우 하는 사람</h4>
+      {% for follower in user.followers.all %}
+      <h5 class="text-center"><a href="{% url 'accounts:user_page' follower.id%}">{{follower.username}}</a></h5>
+      {% endfor %}
+    </div>
+  </div>
   <h2 class="my-3">📝 나의 POST [{{user.post_set.count}}]</h2>
   <hr>
   <div class="my-4">
