@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
+from .models import User
 # Create your views here.
 
 
@@ -47,3 +48,9 @@ def login(req):
 def logout(req):
     auth_logout(req)
     return redirect('posts:index')
+
+
+def user_page(req, user_id):
+    search_user = get_object_or_404(User, id=user_id)
+
+    return render(req, 'accounts/user_page.html', {'search_user': search_user})

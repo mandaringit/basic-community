@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load humanize%}
+{% block body %}
+<div class="container my-5">
+  <h1>📜 {{search_user.username}}님의 페이지</h1>
+  <hr>
+  <div class="d-flex justify-content-around">
+    <h4>팔로잉 [{{search_user.followings.count}}]</h4>
+    <h4>팔로워 [{{search_user.followers|length}}]</h4>
+  </div>
+  <div class="my-3">
+    {% for post in search_user.post_set.all %}
+    <div class="d-flex align-items-center">
+      <h6 class="mr-3">{{post.created_at|naturaltime}}</h6>
+      <h5>{{post.title}}</h5>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
