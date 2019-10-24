@@ -28,7 +28,7 @@ def signup(req):
             return redirect('posts:index')
     else:
         form = CustomUserCreationForm()
-    return render(req, 'accounts/form.html', {'form': form})
+    return render(req, 'accounts/signup_form.html', {'form': form})
 
 
 def login(req):
@@ -43,7 +43,7 @@ def login(req):
     else:
         form = AuthenticationForm()
 
-    return render(req, 'accounts/form.html', {'form': form})
+    return render(req, 'accounts/login_form.html', {'form': form})
 
 
 def logout(req):
