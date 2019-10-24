@@ -5,6 +5,14 @@
   <h1 class="mb-3 text-center">👋 {{user.username}}</h1>
   <h5 class="text-center text-muted">{{user.email}}</h5>
   <h6 class="text-center">{{user.last_name}}{{user.first_name}}</h6>
+  <div class="d-flex align-items-center my-3 justify-content-center">
+    <a class="btn btn-sm btn-warning mr-3" href="{% url 'accounts:update' %}">정보수정</a>
+    <a class="btn btn-sm btn-warning mr-3" href="{% url 'accounts:password' %}">비밀번호변경</a>
+    <form action="{% url 'accounts:delete' user.id %}" method="POST">
+      {%csrf_token%}
+      <input class="btn btn-sm btn-danger mr-3" type="submit" value="회원탈퇴">
+    </form>
+  </div>
   <div class="d-flex justify-content-around py-3 mb-4" style="border: 2px solid gray; border-radius:3px;">
     <div>
       <h4>내가 팔로잉 하는 사람</h4>
@@ -67,14 +75,7 @@
       href="{%url 'posts:detail' comment.post.id%}">{{comment.content}}</a></h5>
   {%endfor%}
 
-  <div>
-    <form action="{% url 'accounts:delete' user.id %}" method="POST">
-      {%csrf_token%}
-      <input class="btn btn-sm btn-danger" type="submit" value="회원탈퇴">
-    </form>
-    <a href="{% url 'accounts:update' %}">정보수정</a>
-    <a href="">비밀번호변경</a>
-  </div>
+
 
 </div>
 

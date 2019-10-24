@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import User
@@ -70,6 +71,20 @@ def update(req):
             return redirect('accounts:mypage')
     else:
         form = CustomUserChangeForm(instance=req.user)
+
+    return render(req, 'accounts/form.html', {'form': form})
+
+
+def password(req):
+    if req.method == "POST":
+        form = PasswordChangeForm(req.user, req.POST)
+        if form.is_valid():
+            user = form.save()
+            # 비밀번호가 변경되면 자동으로 로그아웃된다.
+            update_session_auth_hash(req, user)  # 자동 로그아웃을 방지
+            return redirect('accounts:mypage')
+    else:
+        form = PasswordChangeForm(req.user)
 
     return render(req, 'accounts/form.html', {'form': form})
 
