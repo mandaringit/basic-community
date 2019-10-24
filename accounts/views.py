@@ -50,8 +50,23 @@ def logout(req):
     return redirect('posts:index')
 
 
+@login_required  # 포스트 요구 ? 로그인 요구 ?
+def delete(req, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    user = req.user
+
+    if target_user == user:
+        user.delete()
+
+    return redirect('posts:index')
+
+
 def user_page(req, user_id):
     search_user = get_object_or_404(User, id=user_id)
+
+    # 본인은 마이페이지로.
+    if req.user == search_user:
+        return redirect('accounts:mypage')
 
     return render(req, 'accounts/user_page.html', {'search_user': search_user})
 

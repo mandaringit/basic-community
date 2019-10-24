@@ -65,6 +65,13 @@
       href="{%url 'posts:detail' comment.post.id%}">{{comment.content}}</a></h5>
   {%endfor%}
 
+  <form action="{% url 'accounts:delete' user.id %}" method="POST">
+    {%csrf_token%}
+    <input class="btn btn-sm btn-danger" type="submit" value="회원탈퇴">
+  </form>
+  <a href="">정보수정</a>
+  <a href="">비밀번호변경</a>
+
 </div>
 
 
