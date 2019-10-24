@@ -148,4 +148,6 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
+# LOGIN_REDIRECT_URL = 'posts:index' # 로그인시 리다이렉트 가능.
+
 ###
