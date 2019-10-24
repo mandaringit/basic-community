@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import User
 # Create your views here.
 
@@ -59,6 +59,19 @@ def delete(req, user_id):
         user.delete()
 
     return redirect('posts:index')
+
+
+@login_required
+def update(req):
+    if req.method == 'POST':
+        form = CustomUserChangeForm(req.POST, instance=req.user)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:mypage')
+    else:
+        form = CustomUserChangeForm(instance=req.user)
+
+    return render(req, 'accounts/form.html', {'form': form})
 
 
 def user_page(req, user_id):
