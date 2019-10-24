@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container my-5">
   <div class="d-flex align-items-center justify-content-between">
-    <h1>📜 {{search_user.username}}님의 페이지</h1>
+    <h1>🍧 {{search_user.username}}</h1>
     {%if user.is_authenticated and user != search_user %}
     {% if search_user in user.followings.all %}
     <div>
@@ -17,17 +17,44 @@
     {% endif%}
   </div>
   <hr>
-  <div class="d-flex justify-content-around">
-    <h4>팔로잉 [{{search_user.followings.all.count}}]</h4>
-    <h4>팔로워 [{{search_user.followers.all|length}}]</h4>
-  </div>
-  <div class="my-3">
-    {% for post in search_user.post_set.all %}
-    <div class="d-flex align-items-center">
-      <h6 class="mr-3">{{post.created_at|naturaltime}}</h6>
-      <h5>{{post.title}}</h5>
+  <!-- following / follower -->
+  <div class="text-center mb-3">
+    <div class="btn-group mr-3">
+      <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        팔로잉 ({{search_user.followings.all|length}})
+      </button>
+      <div class="dropdown-menu text-center p-3">
+        {% for following in search_user.followings.all %}
+        <h5 class="text-center font-weight-bold"><a class="text-dark" style="text-decoration: none;"
+            href="{% url 'accounts:user_page' following.id%}">{{following.username}}</a></h5>
+        {% empty %}
+        <h6>팔로잉이 없습니다.</h6>
+        {% endfor %}
+      </div>
     </div>
+
+    <div class="btn-group">
+      <button class="btn btn-success btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        팔로워 ({{search_user.followers.all|length}})
+      </button>
+      <div class="dropdown-menu text-center p-3">
+        {% for follower in search_user.followers.all %}
+        <h5 class="text-center font-weight-bold"><a class="text-dark" style="text-decoration: none;"
+            href="{% url 'accounts:user_page' follower.id%}">{{follower.username}}</a></h5>
+        {% empty %}
+        <h6>팔로워가 없습니다.</h6>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for post in search_user.post_set.all %}
+    {% include 'posts/_post_card.html' %}
     {% endfor %}
   </div>
-</div>
-{% endblock %}
+
+
+  {% endblock %}

@@ -52,16 +52,19 @@
   <hr>
 
   <div class="my-4">
-    {% for post in user.post_set.all %}
-    <div class="d-flex">
-      <h6 class="mr-3">{{post.created_at|naturaltime}}</h6>
-      <h5 class="font-weight-bold">
-        <a href="{% url 'posts:detail' post.id%}" class="text-dark" style="text-decoration: none;">
-          {{post.title}}
-        </a>
-      </h5>
+    <div class="row">
+      {% for post in user.post_set.all %}
+      {% include 'posts/_post_card.html' %}
+      {% endfor %}
     </div>
-    {% endfor %}
+  </div>
+
+  <h2 class="my-4">👍 나의 따봉 포스트 [{{user.like_posts.count}}]</h2>
+  <hr>
+  <div class="row">
+    {% for post in user.like_posts.all%}
+    {% include 'posts/_post_card.html' %}
+    {%endfor%}
   </div>
 
   <h2 class="my-3">💬 나의 COMMENT [{{user.comment_set.count}}]</h2>
@@ -80,13 +83,6 @@
     </div>
     {% endfor %}
   </div>
-
-  <h2 class="my-4">👍 나의 따봉 포스트 [{{user.like_posts.count}}]</h2>
-  <hr>
-  {% for post in user.like_posts.all%}
-  <h5><a class="text-dark font-weight-bold" style="text-decoration:none;"
-      href="{%url 'posts:detail' post.id%}">{{post.title}}</a></h5>
-  {%endfor%}
 
   <h2 class="my-4">📑 나의 따봉 코멘트 [{{user.like_comments.count}}]</h2>
   <hr>
