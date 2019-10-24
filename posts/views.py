@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Hashtag
+from django.core.paginator import Paginator
 import random
 # Create your views here.
 
@@ -20,6 +21,10 @@ def hashtagging(obj):
 
 def index(req):
     posts = Post.objects.all().order_by('-created_at')
+    paginator = Paginator(posts, 12)
+
+    page = req.GET.get('page')
+    posts = paginator.get_page(page)
     return render(req, 'posts/index.html', {'posts': posts})
 
 
