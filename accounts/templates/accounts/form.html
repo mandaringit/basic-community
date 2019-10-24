@@ -1,0 +1,17 @@
+{%extends 'base.html'%}
+{% load bootstrap4 %}
+{% load socialaccount %}
+{% load static %}
+{%block body%}
+<div class="container my-5" style="max-width: 500px;">
+  <div class="p-4" style="border: 1px solid rgba(0,0,0,0.1); border-radius:5px;">
+    <form action="" method="post">
+      {%csrf_token%}
+      {%bootstrap_form form%}
+      <div class="text-center mb-3">
+        <input class="btn btn-dark" type="submit" value="로그인">
+      </div>
+    </form>
+  </div>
+</div>
+{%endblock%}
