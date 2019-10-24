@@ -21,7 +21,7 @@
     <h6 class="m-0 mr-3">👤 <a href="{% url 'accounts:user_page' post.user.id%}"
         style="text-decoration: none;">{{post.user.username}}</a></h6>
     <h6 class="text-muted m-0 mr-3">📅 {{post.created_at}}</h6>
-    <h6 class="text-primary m-0 mr-3">👍{{post.like_users.count}}</h6>
+    <h6 class="text-muted m-0 mr-3">👍{{post.like_users.count}}</h6>
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
@@ -32,16 +32,16 @@
   <div class="text-center my-5">
     {% if user.is_authenticated %}
     {% if user in post.like_users.all %}
-    <a class="btn btn-danger btn-sm" href="{%url 'posts:post_like' post.id %}">시러요</a>
+    <a class="btn btn-danger btn-sm" href="{%url 'posts:post_like' post.id %}">🤔</a>
     {% else %}
-    <a class="btn btn-primary btn-sm" href="{%url 'posts:post_like' post.id %}">조아요</a>
+    <a class="btn btn-primary btn-sm" href="{%url 'posts:post_like' post.id %}">😍</a>
     {% endif %}
     {% endif %}
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
-
   <h6>💬 COMMENT</h6>
+  {% if user.is_authenticated %}
   <form class="my-3" action="{% url 'posts:comments_create' post.id%}" method="post">
     {%csrf_token%}
     {%bootstrap_form comment_form%}
@@ -49,42 +49,13 @@
       <input type="submit" class="btn btn-dark btn-sm" value="댓글달기">
     </div>
   </form>
+  {% else %}
+  <h6 class="text-center">댓글을 남기려면 <a href="{% url 'accounts:login' %}">로그인</a></h6>
+  {% endif%}
 
   <hr>
+  {% include 'posts/_comments.html' %}
 
-  {% for comment in post.comment_set.all%}
-  <div class="d-flex justify-content-between align-items-center">
-    <h6 class="text-muted mx-2">{{comment.user.username}} 👍{{comment.like_users.count}}</h6>
-    <div class="d-flex align-items-center">
-      {% if user.is_authenticated %}
-      {% if user in comment.like_users.all %}
-      <a class="btn btn-sm btn-danger mr-1" href="{% url 'posts:comment_like' post.id comment.id %}">싫어요</a>
-      {% else %}
-      <a class="btn btn-sm btn-primary mr-1" href="{% url 'posts:comment_like' post.id comment.id %}">좋아요</a>
-      {% endif %}
-      {% endif %}
-
-      {% if request.user == comment.user %}
-      <form class="mr-1" action="{%  url 'posts:comments_delete' post.id comment.id%}" method="post">
-        {%csrf_token%}
-        <input type="submit" class="btn btn-dark btn-sm" value="🗑️">
-      </form>
-      <a class="btn btn-sm btn-warning" href="{% url 'posts:comments_update' post.id comment.id %}">✏️</a>
-      {% endif%}
-
-    </div>
-  </div>
-
-  <div class="d-flex justify-content-between my-1">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="mr-2"
-        style="background-image: url({{comment.comment_img}});width:75px;height:75px;background-position:center;background-size:cover; background-color:white; border-radius:10px;">
-      </div>
-      <h6>{{comment|hashtag_link|safe}}</h6>
-    </div>
-  </div>
-  <hr style="border: 1px solid rgba(0,0,0,0.1);">
-  {%endfor%}
 </div>
 
 

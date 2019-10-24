@@ -3,8 +3,14 @@
 <div class="container my-5">
   <h1>{{hashtag.content}}</h1>
   <hr>
-  {% for post in hashtag.posts.all %}
-  <h4><a class="text-dark" href="{% url 'posts:detail' post.id%}" style="text-decoration: none;">{{post.title}}</a></h4>
-  {% endfor %}
+  <div class="row">
+    {% for post in hashtag.posts.all %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <a class="text-dark" href="{% url 'posts:detail' post.id%}" style="text-decoration: none;">
+        <img src="{{post.post_img.url}}" alt="" style="object-fit: cover;width:100%">
+      </a>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

@@ -2,9 +2,11 @@
 {% load humanize %}
 {%block body%}
 <div class="container my-5">
+
   <h1 class="mb-3 text-center">👋 {{user.username}}</h1>
   <h5 class="text-center text-muted">{{user.email}}</h5>
   <h6 class="text-center">{{user.last_name}}{{user.first_name}}</h6>
+
   <div class="d-flex align-items-center my-3 justify-content-center">
     <a class="btn btn-sm btn-warning mr-3" href="{% url 'accounts:update' %}">정보수정</a>
     <a class="btn btn-sm btn-warning mr-3" href="{% url 'accounts:password' %}">비밀번호변경</a>
@@ -13,24 +15,42 @@
       <input class="btn btn-sm btn-danger mr-3" type="submit" value="회원탈퇴">
     </form>
   </div>
-  <div class="d-flex justify-content-around py-3 mb-4" style="border: 2px solid gray; border-radius:3px;">
-    <div>
-      <h4>내가 팔로잉 하는 사람</h4>
 
-      {% for following in user.followings.all %}
-      <h5 class="text-center"><a href="{% url 'accounts:user_page' following.id%}">{{following.username}}</a></h5>
-      {% endfor %}
-
+  <div class="d-flex justify-content-center py-3 mb-4">
+    <div class="btn-group mr-3">
+      <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        팔로잉 ({{user.followings.all|length}})
+      </button>
+      <div class="dropdown-menu text-center p-3">
+        {% for following in user.followings.all %}
+        <h5 class="text-center font-weight-bold"><a class="text-dark" style="text-decoration: none;"
+            href="{% url 'accounts:user_page' following.id%}">{{following.username}}</a></h5>
+        {% empty %}
+        <h6>팔로잉이 없습니다.</h6>
+        {% endfor %}
+      </div>
     </div>
-    <div>
-      <h4>나를 팔로우 하는 사람</h4>
-      {% for follower in user.followers.all %}
-      <h5 class="text-center"><a href="{% url 'accounts:user_page' follower.id%}">{{follower.username}}</a></h5>
-      {% endfor %}
+
+    <div class="btn-group">
+      <button class="btn btn-success btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        팔로워 ({{user.followers.all|length}})
+      </button>
+      <div class="dropdown-menu text-center p-3">
+        {% for follower in user.followers.all %}
+        <h5 class="text-center font-weight-bold"><a class="text-dark" style="text-decoration: none;"
+            href="{% url 'accounts:user_page' follower.id%}">{{follower.username}}</a></h5>
+        {% empty %}
+        <h6>팔로워가 없습니다.</h6>
+        {% endfor %}
+      </div>
     </div>
   </div>
+
   <h2 class="my-3">📝 나의 POST [{{user.post_set.count}}]</h2>
   <hr>
+
   <div class="my-4">
     {% for post in user.post_set.all %}
     <div class="d-flex">
@@ -46,6 +66,7 @@
 
   <h2 class="my-3">💬 나의 COMMENT [{{user.comment_set.count}}]</h2>
   <hr>
+
   <div class="my-4">
     {% for comment in user.comment_set.all %}
     <div class="d-flex">
@@ -58,9 +79,8 @@
       </h5>
     </div>
     {% endfor %}
-
-
   </div>
+
   <h2 class="my-4">👍 나의 따봉 포스트 [{{user.like_posts.count}}]</h2>
   <hr>
   {% for post in user.like_posts.all%}
@@ -74,8 +94,6 @@
   <h5><a class="text-dark font-weight-bold" style="text-decoration:none;"
       href="{%url 'posts:detail' comment.post.id%}">{{comment.content}}</a></h5>
   {%endfor%}
-
-
 
 </div>
 

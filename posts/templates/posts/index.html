@@ -6,7 +6,7 @@
   <hr>
   <div class="row">
     {% for post in posts %}
-    <div class="col-12 col-lg-4 my-2">
+    <div class="col-12 col-md-6 col-lg-4 my-2">
       <div class="card-deck">
         <div class="card">
           <a href="{% url 'posts:detail' post.id%}">
