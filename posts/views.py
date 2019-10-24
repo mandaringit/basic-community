@@ -5,6 +5,18 @@ from .models import Post, Comment, Hashtag
 import random
 # Create your views here.
 
+# Utility fn
+
+
+def hashtagging(obj):
+    for word in obj.content.split():
+        if word.startswith('#'):
+            hashtag, created = Hashtag.objects.get_or_create(
+                content=word)
+            obj.hashtags.add(hashtag)
+
+# routes
+
 
 def index(req):
     posts = Post.objects.all().order_by('-created_at')
@@ -22,11 +34,7 @@ def create(req):
             post.save()
 
             # 해시태그 작업 (구체적인 방법은 수정 필요.)
-            for word in post.content.split():
-                if word.startswith('#'):
-                    hashtag, created = Hashtag.objects.get_or_create(
-                        content=word)
-                    post.hashtags.add(hashtag)
+            hashtagging(post)
 
             return redirect('posts:index')
     else:
@@ -52,11 +60,8 @@ def update(req, post_id):
             if form.is_valid():
                 post = form.save()
                 # 해시태그 재작업 필요함
-                for word in post.content.split():
-                    if word.startswith('#'):
-                        hashtag, created = Hashtag.objects.get_or_create(
-                            content=word)
-                        post.hashtags.add(hashtag)
+                post.hashtags.clear()
+                hashtagging(post)
 
                 return redirect('posts:detail', post_id)
         else:
@@ -90,11 +95,7 @@ def comments_create(req, post_id):
                 comment.save()
 
                 # 해시태그 작업
-                for word in comment.content.split():
-                    if word.startswith('#'):
-                        hashtag, created = Hashtag.objects.get_or_create(
-                            content=word)
-                        comment.hashtags.add(hashtag)
+                hashtagging(comment)
 
                 return redirect('posts:detail', post_id)
     else:
@@ -117,7 +118,8 @@ def comments_update(req, post_id, comment_id):
             form = CommentForm(req.POST, instance=comment)
             if form.is_valid():
                 form.save()
-                # 해시태그 재작업 필요함
+                comment.hashtags.clear()
+                hashtagging(comment)
                 return redirect('posts:detail', post_id)
         else:
             form = CommentForm(instance=comment)
