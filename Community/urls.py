@@ -22,8 +22,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('accounts/', include('accounts.urls')),
     path('posts/', include('posts.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),  # url의 우선순위는 먼저 넣은것이 사용된다.
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
