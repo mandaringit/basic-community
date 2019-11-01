@@ -21,7 +21,6 @@
     <h6 class="m-0 mr-3">👤 <a href="{% url 'accounts:user_page' post.user.id%}"
         style="text-decoration: none;">{{post.user.username}}</a></h6>
     <h6 class="text-muted m-0 mr-3">📅 {{post.created_at}}</h6>
-    <h6 class="text-muted m-0 mr-3">👍{{post.like_users.count}}</h6>
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
@@ -31,12 +30,16 @@
   <p class="my-5" style="min-height: 100px;">{{post|hashtag_link|safe}}</p>
   <div class="text-center my-5">
     {% if user.is_authenticated %}
-    {% if user in post.like_users.all %}
-    <a class="btn btn-danger btn-sm" href="{%url 'posts:post_like' post.id %}">🤔</a>
-    {% else %}
-    <a class="btn btn-primary btn-sm" href="{%url 'posts:post_like' post.id %}">😍</a>
-    {% endif %}
-    {% endif %}
+    <button data-id="{{post.id}}" class="like-btn btn">
+      {% if user in post.like_users.all %}
+      <i data-id="{{post.id}}" class="fas fa-thumbs-up"><span data-id="{{post.id}}"
+          class="like-count ml-2">{{post.like_users.count}}</span></i>
+      {% else %}
+      <i data-id="{{post.id}}" class="far fa-thumbs-up"><span data-id="{{post.id}}"
+          class="like-count ml-2">{{post.like_users.count}}</span></i>
+      {% endif %}
+      {% endif %}
+    </button>
   </div>
 
   <hr style="border: 2px solid rgba(0,0,0,.1);">
@@ -58,5 +61,34 @@
 
 </div>
 
+<script>
+  const likeBtn = document.querySelector('.like-btn')
+  const likeIcon = document.querySelector('.fa-thumbs-up')
+  likeBtn.addEventListener('click', (e) => {
+    const postId = e.target.dataset.id
+    const likeCount = document.querySelector(`.like-count[data-id="${postId}"]`)
+    axios.get(`/posts/${postId}/like/`)
+      .then(res => {
+        const {
+          is_post_liked,
+          post_like_count
+        } = res.data
+
+        // 카운트 변경
+        likeCount.innerText = post_like_count
+
+        // 아이콘 변경
+        if (is_post_liked) {
+          likeIcon.classList.remove('far')
+          likeIcon.classList.add('fas')
+        } else {
+          likeIcon.classList.remove('fas')
+          likeIcon.classList.add('far')
+        }
+
+      })
+      .catch(err => console.log(err))
+  })
+</script>
 
 {%endblock%}

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Hashtag
 from django.core.paginator import Paginator
 import random
+from django.http import JsonResponse
 # Create your views here.
 
 # Utility fn
@@ -141,23 +142,40 @@ def post_like(req, post_id):
 
     if user in post.like_users.all():
         post.like_users.remove(user)
+        is_post_liked = False
     else:
         post.like_users.add(user)
+        is_post_liked = True
 
-    return redirect('posts:detail', post_id)
+    post_like_count = post.like_users.all().count()
+
+    context = {
+        'is_post_liked': is_post_liked,
+        'post_like_count': post_like_count
+    }
+
+    return JsonResponse(context)
 
 
 @login_required
-def comment_like(req, post_id, comment_id):
+def comment_like(req, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     user = req.user
 
     if comment.like_users.filter(id=user.id):
         comment.like_users.remove(user)
+        is_comment_liked = False
     else:
         comment.like_users.add(user)
+        is_comment_liked = True
 
-    return redirect('posts:detail', post_id)
+    comment_like_count = comment.like_users.all().count()
+    context = {
+        'is_comment_liked': is_comment_liked,
+        'comment_like_count': comment_like_count
+    }
+
+    return JsonResponse(context)
 
 
 def hashtag(req, tag_id):

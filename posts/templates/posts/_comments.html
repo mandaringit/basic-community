@@ -2,13 +2,18 @@
 
 {% for comment in post.comment_set.all%}
 <div class="d-flex justify-content-between align-items-center">
-  <h6 class="text-muted mx-2">{{comment.user.username}} 👍{{comment.like_users.count}}</h6>
+  <h6 class="text-muted mx-2">{{comment.user.username}} <span class="comment-like-count"
+      data-id="{{comment.id}}">{{comment.like_users.all.count}}</span></h6>
   <div class="d-flex align-items-center">
     {% if user.is_authenticated %}
     {% if user in comment.like_users.all %}
-    <a class="btn btn-sm btn-danger mr-1" href="{% url 'posts:comment_like' post.id comment.id %}">싫어요</a>
+    <button class="btn btn-sm btn-danger mr-1 comment-like" data-id="{{comment.id}}">
+      좋아요취소
+    </button>
     {% else %}
-    <a class="btn btn-sm btn-primary mr-1" href="{% url 'posts:comment_like' post.id comment.id %}">좋아요</a>
+    <button class="btn btn-sm btn-primary mr-1 comment-like" data-id="{{comment.id}}">
+      좋아요
+    </button>
     {% endif %}
     {% endif %}
 
@@ -32,3 +37,32 @@
 </div>
 <hr style="border: 1px solid rgba(0,0,0,0.1);">
 {%endfor%}
+
+<script>
+  const commentLikeBtns = document.querySelectorAll('.comment-like')
+  commentLikeBtns.forEach(button => button.addEventListener('click', e => {
+    const {
+      id: commentId
+    } = e.target.dataset
+    const commentLikeBtn = document.querySelector(`.comment-like[data-id="${commentId}"]`)
+    const commentLikeCount = document.querySelector(`.comment-like-count[data-id="${commentId}"]`)
+    axios.get(`/posts/comments/${commentId}/like`)
+      .then(res => {
+        const {
+          comment_like_count,
+          is_comment_liked
+        } = res.data
+        commentLikeCount.innerText = comment_like_count
+        if (is_comment_liked) {
+          commentLikeBtn.innerText = '좋아요취소'
+          commentLikeBtn.classList.remove('btn-primary')
+          commentLikeBtn.classList.add('btn-danger')
+        } else {
+          commentLikeBtn.innerText = '좋아요'
+          commentLikeBtn.classList.remove('btn-danger')
+          commentLikeBtn.classList.add('btn-primary')
+        }
+      })
+      .then(err => console.log(err))
+  }))
+</script>
