@@ -46,12 +46,15 @@
     } = e.target.dataset
     const commentLikeBtn = document.querySelector(`.comment-like[data-id="${commentId}"]`)
     const commentLikeCount = document.querySelector(`.comment-like-count[data-id="${commentId}"]`)
+
     axios.get(`/posts/comments/${commentId}/like`)
       .then(res => {
+
         const {
           comment_like_count,
           is_comment_liked
         } = res.data
+
         commentLikeCount.innerText = comment_like_count
         if (is_comment_liked) {
           commentLikeBtn.innerText = '좋아요취소'
@@ -63,6 +66,6 @@
           commentLikeBtn.classList.add('btn-primary')
         }
       })
-      .then(err => console.log(err))
+      .catch(err => console.log(err))
   }))
 </script>
